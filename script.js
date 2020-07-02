@@ -38,6 +38,18 @@ document.querySelector('[data-card="2"]').addEventListener('click', (event) => {
   showCard(data.currentCardNumber);
 });
 
+document.querySelector('[data-card="4"]').addEventListener('click', (event) => {
+  const liElem = event.target.closest('li');
+
+  if (!liElem) return;
+
+  const inputElem = liElem.querySelector('input');
+  data.question4 = inputElem.value;
+
+  data.currentCardNumber = 4;
+  showCard(data.currentCardNumber);
+});
+
 function showCard(n) {
   if (n === 1 || n === 6) {
     hideHeader();
@@ -65,6 +77,17 @@ function showCard(n) {
       }
     });
     if (data.question2) {
+      nextButton.removeAttribute('disabled');
+    }
+  } else if (n === 4) {
+    cardElement.querySelectorAll('input').forEach((inputElement) => {
+      inputElement.removeAttribute('checked');
+
+      if (inputElement.value === data.question4) {
+        inputElement.setAttribute('checked', true);
+      }
+    });
+    if (data.question4) {
       nextButton.removeAttribute('disabled');
     }
   }
