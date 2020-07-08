@@ -27,66 +27,9 @@ document.querySelector('[data-next]').addEventListener('click', () => {
   showCard(data.currentCardNumber);
 });
 
-document.querySelector('[data-card="2"]').addEventListener('click', (event) => {
-  const liElement = event.target.closest('li');
-
-  if (!liElement) {
-    return;
-  }
-
-  const inputElement = liElement.querySelector('input');
-  data.question2 = inputElement.value;
-
-  showCard(data.currentCardNumber);
-});
-
-document.querySelector('[data-card="3"]').addEventListener('click', (event) => {
-  const sElement = event.target.closest('.card-slectable');
-
-  if (!sElement) {
-    return;
-  }
-
-  const inputElement = sElement.querySelector('input');
-  const value = inputElement.value;
-
-  toggleItem(data.question3, value);
-
-  showCard(data.currentCardNumber);
-});
-
-document.querySelector('[data-card="4"]').addEventListener('click', (event) => {
-  const liElement = event.target.closest('li');
-
-  if (!liElement) {
-    return;
-  }
-
-  const inputElement = liElement.querySelector('input');
-  data.question4 = inputElement.value;
-
-  showCard(data.currentCardNumber);
-});
-
-document.querySelector('[data-name').addEventListener('keyup', (event) => {
-  data.question5.name = event.target.value;
-
-  showCard(data.currentCardNumber);
-});
-
-document.querySelector('[data-address').addEventListener('keyup', (event) => {
-  data.question5.email = event.target.value;
-
-  showCard(data.currentCardNumber);
-});
-
-document.querySelector('[data-confirm').addEventListener('click', () => {
-  data.question5.confirm = true;
-
-  showCard(data.currentCardNumber);
-});
-
 function showCard(n) {
+  updateProgress();
+
   if (n === 1 || n === 6) {
     hideFooter();
     hideHeader();
@@ -102,53 +45,14 @@ function showCard(n) {
   const cardElement = document.querySelector(`[data-card="${n}"]`);
   cardElement.style.display = '';
 
-  const nextButton = document.querySelector('[data-next]');
-  nextButton.setAttribute('disabled', true);
-
   if (n === 2) {
-    cardElement.querySelectorAll('input').forEach((inputElement) => {
-      inputElement.checked = false;
-
-      if (inputElement.value === data.question2) {
-        inputElement.checked = true;
-      }
-    });
-
-    if (data.question2) {
-      nextButton.removeAttribute('disabled');
-    }
+    showCard2(n);
   } else if (n === 3) {
-    cardElement.querySelectorAll('input').forEach((inputElement) => {
-      inputElement.removeAttribute('checked');
-
-      if (inputElement.checked) {
-        inputElement.checked = false;
-      }
-
-      if (data.question3.includes(inputElement.value)) {
-        inputElement.checked = true;
-      }
-    });
-
-    if (data.question3.length) {
-      nextButton.removeAttribute('disabled');
-    }
+    showCard3(n);
   } else if (n === 4) {
-    cardElement.querySelectorAll('input').forEach((inputElement) => {
-      inputElement.checked = false;
-
-      if (inputElement.value === data.question4) {
-        inputElement.checked = true;
-      }
-    });
-
-    if (data.question4) {
-      nextButton.removeAttribute('disabled');
-    }
+    showCard4(n);
   } else if (n === 5) {
-    if (data.question5.name && data.question5.email && data.question5.confirm) {
-      nextButton.removeAttribute('disabled');
-    }
+    showCard5(n);
   }
 }
 
@@ -168,11 +72,34 @@ function hideHeader() {
   document.querySelector('[data-header]').style.display = 'none';
 }
 
-function toggleItem(array, item) {
-  if (array.includes(item)) {
-    const index = array.indexOf(item);
-    array.splice(index, 1);
-  } else {
-    array.push(item);
+function updateProgress() {
+  const pElement = document.querySelector('[data-progressbar]');
+
+  let progress = 0;
+
+  if (data.question2) {
+    progress += 1;
   }
+  if (data.question3.length) {
+    progress += 1;
+  }
+  if (data.question4) {
+    progress += 1;
+  }
+  if (data.question5.name) {
+    progress += 1;
+  }
+  if (data.question5.email) {
+    progress += 1;
+  }
+  if (data.question5.confirm) {
+    progress += 1;
+  }
+  if (progress === 6) {
+    pElement.classList.add('bg-success');
+  }
+
+  progress = (progress / 6) * 100;
+
+  pElement.style.width = `${progress}%`;
 }
